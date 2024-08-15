@@ -42,3 +42,8 @@ Este projeto foi desenvolvido com foco em boas práticas e em uma estrutura modu
 
 Feito com ❤️ por Maiane
 
+### 🌐 Conecte-se Comigo
+
+- 💼 [Portfólio](https://maiane.netlify.app/) - Confira meus projetos e trabalhos anteriores!
+- 🔗 [LinkedIn](https://www.linkedin.com/in/maiane-dhienis-897b28189/) - Conecte-se e siga minhas atualizações profissionais!
+- 📱 [WhatsApp](https://api.whatsapp.com/send?phone=5554999931905&text=Ol%C3%A1%20Maiane) - Entre em contato diretamente!
