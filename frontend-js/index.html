@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation</title>
+  <link rel="stylesheet" href="App.css">
+</head>
+<body>
+  <div class="main">
+    <div class="flip-card" id="flipCardButton">
+      Animate
+    </div>
+
+    <div class="wrapper">
+      <h1 class="left-title">olablbalbla</h1>
+      <div class="contact-wrapper">
+        <div class="envelope" id="envelope">
+          <div class="back paper"></div>
+          <div class="content">
+            <div class="form-wrapper">
+              <form id="form">
+                <div class="top-wrapper">
+                  <div class="input">
+                    <label>Nome</label>
+                    <input type="text" name="nome" id="nome" required />
+                  </div>
+                  <div class="input">
+                    <label>Email</label>
+                    <input type="email" name="email" id="email" required />
+                  </div>
+                </div>
+                <div class="bottom-wrapper">
+                  <div class="input">
+                    <label>Senha</label>
+                    <input type="password" name="senha" id="senha" required />
+                  </div>
+                  <div class="input">
+                    <label>Confirme a senha</label>
+                    <input type="password" name="confirmacaoSenha" id="confirmacaoSenha" required />
+                  </div>
+                  <div class="submit">
+                    <button type="submit" class="submit-card">
+                      Cadastrar
+                    </button>
+                  </div>
+                  <p class="error" id="error"></p>
+                  <p class="success" id="success"></p>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="front paper"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("form");
+        const errorElement = document.getElementById("error");
+        const successElement = document.getElementById("success");
+        const flipCardButton = document.getElementById("flipCardButton");
+        const envelope = document.getElementById("envelope");
+        let flipCard = false;
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const formData = {
+            nome: document.getElementById("nome").value,
+            email: document.getElementById("email").value,
+            senha: document.getElementById("senha").value,
+            confirmacaoSenha: document.getElementById("confirmacaoSenha").value,
+          };
+
+          // Front-end validation
+          if (!formData.nome) {
+            displayError("Nome é obrigatório");
+            return;
+          }
+          if (!validateEmail(formData.email)) {
+            displayError("Email inválido ou indisponível");
+            return;
+          }
+          if (!validatePassword(formData.senha)) {
+            displayError("A senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas e números");
+            return;
+          }
+          if (formData.senha !== formData.confirmacaoSenha) {
+            displayError("As senhas não coincidem");
+            return;
+          }
+
+          try {
+            const response = await fetch("http://localhost:8080/api/submit", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": "ECA1AB4CE8583613A2C759B445E98",
+              },
+              body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              displaySuccess(result.message || "Cadastro realizado com sucesso");
+            } else {
+              displayError(result.message || "Erro no cadastro");
+            }
+          } catch (error) {
+            displayError("Erro na conexão com o servidor");
+          }
+        });
+
+        flipCardButton.addEventListener("click", () => {
+          flipCard = !flipCard;
+          envelope.classList.toggle("active", flipCard);
+          flipCardButton.textContent = flipCard ? "Reset" : "Animate";
+        });
+
+        function validateEmail(email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          const unavailableEmails = ["teste@exemplo.com", "joao@exemplo.com", "maria@acme.net"];
+          return emailRegex.test(email) && !unavailableEmails.includes(email);
+        }
+
+        function validatePassword(senha) {
+          const minLength = 8;
+          const hasUpperCase = /[A-Z]/.test(senha);
+          const hasLowerCase = /[a-z]/.test(senha);
+          const hasNumber = /[0-9]/.test(senha);
+          return senha.length >= minLength && hasUpperCase && hasLowerCase && hasNumber;
+        }
+
+        function displayError(message) {
+          errorElement.textContent = message;
+          successElement.textContent = "";
+        }
+
+        function displaySuccess(message) {
+          successElement.textContent = message;
+          errorElement.textContent = "";
+        }
+      });
+    </script>
+  </div>
+</body>
+</html>
