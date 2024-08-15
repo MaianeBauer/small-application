@@ -40,8 +40,6 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Front-end validation
     if (!formData.nome) {
       setError("Nome é obrigatório");
       return;
@@ -60,8 +58,6 @@ function App() {
       setError("As senhas não coincidem");
       return;
     }
-
-    // If validation passes, proceed with the submission
     try {
       const response = await fetch("http://localhost:8080/api/submit", {
         method: "POST",
